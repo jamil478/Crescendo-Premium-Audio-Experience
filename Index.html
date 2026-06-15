@@ -1,0 +1,1985 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crescendo — Premium Audio Experience</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Tailwind CSS for modern layouts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563EB',
+                        primaryDark: '#1E40AF',
+                        primaryLight: '#DBEAFE',
+                        accent: '#06B6D4',
+                        bgSoft: '#F8FAFF',
+                        darkText: '#0F172A',
+                        lightText: '#64748B',
+                        success: '#10B981',
+                        gold: '#F59E0B',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Syne', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* CSS Animations & Custom Overrides */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8FAFF;
+            color: #0F172A;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .font-syne {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+        }
+
+        /* Glassmorphism Classes */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 20px 60px rgba(37, 99, 235, 0.05);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 30px 70px rgba(37, 99, 235, 0.12);
+        }
+
+        /* Nav Link Animation */
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #2563EB;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .nav-link.active::before {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #2563EB;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        .float-anim {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); opacity: 0.4; filter: blur(50px); }
+            50% { transform: scale(1.15); opacity: 0.7; filter: blur(70px); }
+        }
+        .glow-ring {
+            animation: pulseGlow 8s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        .shimmer-btn:hover {
+            background: linear-gradient(90deg, #2563EB 0%, #06B6D4 50%, #2563EB 100%);
+            background-size: 200% auto;
+            animation: shimmer 1.5s linear infinite;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+        }
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 25s linear infinite;
+        }
+        .marquee-container:hover .marquee-content {
+            animation-play-state: paused;
+        }
+
+        /* Scroll Reveal Animation Styles */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 3D Tilt Wrapper styling */
+        .tilt-card {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        .tilt-inner {
+            transform: translateZ(20px);
+        }
+
+        /* Hidden Scrollbar */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Floating particles */
+        .particle {
+            position: absolute;
+            background-color: rgba(37, 99, 235, 0.15);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Blinking Cursor for Typewriter */
+        .cursor {
+            display: inline-block;
+            width: 3px;
+            background-color: #2563EB;
+            margin-left: 2px;
+            animation: blink 0.8s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body class="bg-bgSoft antialiased">
+
+    <!-- ================= NAVBAR ================= -->
+    <header class="fixed top-0 left-0 w-full z-50 glass-nav transition-all duration-300 py-4 px-6 md:px-12 flex justify-between items-center" id="main-nav">
+        <!-- Logo -->
+        <a href="#home" class="flex items-center space-x-2 text-2xl font-display text-darkText tracking-wider">
+            <span class="text-primary"><i class="fa-solid fa-music"></i></span>
+            <span>CRESCENDO</span>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden lg:flex items-center space-x-8">
+            <a href="#home" class="nav-link active text-sm font-medium text-darkText tracking-wide transition-colors hover:text-primary">Home</a>
+            <a href="#products" class="nav-link text-sm font-medium text-lightText tracking-wide transition-colors hover:text-primary">Products</a>
+            <a href="#categories" class="nav-link text-sm font-medium text-lightText tracking-wide transition-colors hover:text-primary">Categories</a>
+            <a href="#why-choose-us" class="nav-link text-sm font-medium text-lightText tracking-wide transition-colors hover:text-primary">About</a>
+            <a href="#contact" class="nav-link text-sm font-medium text-lightText tracking-wide transition-colors hover:text-primary">Contact</a>
+        </nav>
+
+        <!-- Right Side Controls -->
+        <div class="flex items-center space-x-4 md:space-x-6">
+            <!-- Search Toggle Button -->
+            <button id="search-btn" class="text-lightText hover:text-primary text-lg p-2 transition-transform hover:scale-115">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+            
+            <!-- Wishlist Button -->
+            <button id="wishlist-toggle" class="relative text-lightText hover:text-primary text-lg p-2 transition-transform hover:scale-115">
+                <i class="fa-regular fa-heart"></i>
+                <span id="wishlist-badge" class="absolute -top-1 -right-1 bg-accent text-white text-xxs w-4 h-4 rounded-full flex items-center justify-center font-bold text-[10px] hidden">0</span>
+            </button>
+
+            <!-- Cart Toggle Button -->
+            <button id="cart-toggle" class="relative text-lightText hover:text-primary text-lg p-2 transition-transform hover:scale-115">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <span id="cart-badge" class="absolute -top-1 -right-1 bg-primary text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold transition-transform duration-300">0</span>
+            </button>
+
+            <!-- CTA Shop Button -->
+            <a href="#products" class="hidden sm:inline-flex items-center justify-center px-5 py-2.5 bg-primary text-white text-xs font-semibold uppercase tracking-wider rounded-full hover:bg-primaryDark transition-all shadow-md hover:shadow-lg">
+                Buy Now
+            </a>
+
+            <!-- Mobile Hamburger Menu Button -->
+            <button id="menu-btn" class="lg:hidden text-darkText text-xl p-2 focus:outline-none">
+                <i class="fa-solid fa-bars-staggered"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Interactive Search Bar Overlay -->
+    <div id="search-overlay" class="fixed inset-0 bg-darkText/90 z-[60] backdrop-blur-md flex items-center justify-center px-4 transition-all duration-500 scale-95 opacity-0 pointer-events-none">
+        <button id="search-close" class="absolute top-8 right-8 text-white/70 hover:text-white text-2xl"><i class="fa-solid fa-xmark"></i></button>
+        <div class="w-full max-w-2xl text-center">
+            <h3 class="text-white text-2xl font-display mb-6 tracking-wide">WHAT ARE YOU LOOKING FOR?</h3>
+            <div class="relative flex items-center border-b border-white/20 pb-4">
+                <input type="text" placeholder="Search headphones, earbuds, speakers..." class="w-full bg-transparent text-white text-xl placeholder-white/30 focus:outline-none">
+                <button class="text-white text-xl hover:text-primary transition-colors"><i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Overlay Menu -->
+    <div id="mobile-menu" class="fixed inset-0 bg-white z-[55] flex flex-col justify-center items-center space-y-8 transition-transform duration-500 translate-x-full lg:hidden">
+        <button id="mobile-menu-close" class="absolute top-8 right-8 text-darkText text-2xl"><i class="fa-solid fa-xmark"></i></button>
+        <a href="#home" class="mobile-nav-link text-3xl font-display text-darkText hover:text-primary">Home</a>
+        <a href="#products" class="mobile-nav-link text-3xl font-display text-darkText hover:text-primary">Products</a>
+        <a href="#categories" class="mobile-nav-link text-3xl font-display text-darkText hover:text-primary">Categories</a>
+        <a href="#why-choose-us" class="mobile-nav-link text-3xl font-display text-darkText hover:text-primary">About</a>
+        <a href="#contact" class="mobile-nav-link text-3xl font-display text-darkText hover:text-primary">Contact</a>
+        <a href="#products" class="px-8 py-3 bg-primary text-white font-semibold rounded-full hover:bg-primaryDark transition-all">SHOP THE COLLECTION</a>
+    </div>
+
+    <!-- Slide-over Shopping Cart Drawer -->
+    <div id="cart-drawer" class="fixed inset-0 z-[70] pointer-events-none">
+        <div id="cart-backdrop" class="absolute inset-0 bg-black/40 backdrop-blur-sm opacity-0 transition-opacity duration-300 pointer-events-none"></div>
+        <div id="cart-content" class="absolute top-0 right-0 w-full max-w-md h-full bg-white shadow-2xl flex flex-col justify-between transform translate-x-full transition-transform duration-500 ease-out pointer-events-auto">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center">
+                <h3 class="text-xl font-display text-darkText">SHOPPING CART (<span id="cart-drawer-count">0</span>)</h3>
+                <button id="cart-close" class="text-lightText hover:text-darkText text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <!-- Dynamic Cart Items Container -->
+            <div id="cart-items" class="flex-1 overflow-y-auto p-6 space-y-4 no-scrollbar">
+                <!-- Empty State -->
+                <div id="cart-empty" class="h-full flex flex-col items-center justify-center text-center">
+                    <div class="text-slate-300 text-6xl mb-4"><i class="fa-solid fa-bag-shopping"></i></div>
+                    <p class="text-lightText mb-6">Your cart is currently empty.</p>
+                    <a href="#products" id="cart-start-shopping" class="px-6 py-2 bg-primary text-white font-semibold rounded-full hover:bg-primaryDark transition-all text-sm">START SHOPPING</a>
+                </div>
+            </div>
+
+            <!-- Cart Summary & Actions -->
+            <div id="cart-summary" class="p-6 border-t border-slate-100 bg-slate-50 space-y-4 hidden">
+                <div class="flex justify-between items-center text-darkText font-semibold">
+                    <span>Subtotal</span>
+                    <span id="cart-subtotal" class="text-primary text-lg">$0.00</span>
+                </div>
+                <p class="text-xs text-lightText">Taxes and shipping computed at checkout.</p>
+                <div class="space-y-2">
+                    <button id="checkout-btn" class="w-full py-3 bg-primary text-white font-semibold rounded-xl hover:bg-primaryDark transition-colors shadow-lg">PROCEED TO CHECKOUT</button>
+                    <button id="clear-cart" class="w-full py-2 text-xs text-lightText hover:text-red-500 font-medium transition-colors">CLEAR CART</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main>
+
+        <!-- 2. HERO SECTION -->
+        <section id="home" class="relative min-h-screen pt-24 pb-12 flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#EFF6FF] via-[#F8FAFF] to-[#ECFEFF]">
+            <!-- Particle canvas backplate -->
+            <div id="particle-container" class="absolute inset-0 z-0"></div>
+            
+            <!-- Pulsing glow behind primary product layout -->
+            <div class="absolute right-0 top-1/4 w-[400px] h-[400px] md:w-[600px] md:h-[600px] bg-primary/10 rounded-full glow-ring z-0"></div>
+            <div class="absolute left-1/4 bottom-10 w-[300px] h-[300px] bg-accent/10 rounded-full glow-ring z-0"></div>
+
+            <div class="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10 w-full">
+                <!-- Text Container -->
+                <div class="space-y-6 text-center lg:text-left">
+                    <div class="inline-flex items-center space-x-2 px-4 py-2 bg-primaryLight/50 border border-primary/20 rounded-full text-primary text-xs font-semibold uppercase tracking-wider">
+                        <span class="relative flex h-2 w-2 mr-1">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                        </span>
+                        🎧 Premium Audio Experience
+                    </div>
+                    
+                    <h1 class="text-4xl sm:text-5xl md:text-6xl text-darkText leading-tight">
+                        <span id="typewriter-text" class="text-primary"></span><span class="cursor">|</span><br>
+                        Your Audio Journey
+                    </h1>
+                    
+                    <p class="text-lightText text-base md:text-lg max-w-lg mx-auto lg:mx-0 font-light leading-relaxed">
+                        Discover premium sound engineered for those who refuse to compromise. From studio-grade headphones to everyday earbuds — your perfect audio companion awaits.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
+                        <a href="#products" class="w-full sm:w-auto px-8 py-4 bg-primary text-white font-semibold rounded-full hover:bg-primaryDark transition-all shadow-lg shadow-primary/20 flex items-center justify-center space-x-2 text-sm uppercase tracking-wider shimmer-btn">
+                            <span>Shop Now</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                        <a href="#categories" class="w-full sm:w-auto px-8 py-4 bg-white/80 border border-slate-200 text-darkText font-semibold rounded-full hover:bg-white hover:border-primary transition-all text-sm uppercase tracking-wider flex items-center justify-center">
+                            Explore Collection
+                        </a>
+                    </div>
+
+                    <!-- Trust badging -->
+                    <div class="grid grid-cols-3 gap-4 pt-8 border-t border-slate-200/50 max-w-md mx-auto lg:mx-0">
+                        <div class="text-center lg:text-left">
+                            <div class="flex items-center justify-center lg:justify-start text-gold text-sm space-x-1 mb-1">
+                                <i class="fa-solid fa-star"></i><span class="text-darkText font-bold text-sm ml-1">4.9</span>
+                            </div>
+                            <p class="text-xs text-lightText font-medium">5,000+ Reviews</p>
+                        </div>
+                        <div class="text-center lg:text-left border-l border-slate-200/80 px-2">
+                            <div class="flex items-center justify-center lg:justify-start text-primary text-sm space-x-1 mb-1">
+                                <i class="fa-solid fa-truck-fast"></i>
+                            </div>
+                            <p class="text-xs text-lightText font-medium">Free Shipping</p>
+                        </div>
+                        <div class="text-center lg:text-left border-l border-slate-200/80 px-2">
+                            <div class="flex items-center justify-center lg:justify-start text-success text-sm space-x-1 mb-1">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <p class="text-xs text-lightText font-medium">Secure Checkout</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Display Hero Image -->
+                <div class="flex justify-center items-center relative py-12 lg:py-0">
+                    <!-- Elegant CSS / SVG rendered premium Headphones -->
+                    <div class="float-anim relative w-72 h-72 md:w-96 md:h-96 flex items-center justify-center">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-primary to-accent rounded-full opacity-10 blur-3xl"></div>
+                        <svg class="w-full h-full drop-shadow-[0_35px_35px_rgba(37,99,235,0.3)]" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Gradient definitions -->
+                            <defs>
+                                <linearGradient id="primary-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#2563EB" />
+                                    <stop offset="100%" stop-color="#06B6D4" />
+                                </linearGradient>
+                                <linearGradient id="metal-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#E2E8F0" />
+                                    <stop offset="50%" stop-color="#94A3B8" />
+                                    <stop offset="100%" stop-color="#475569" />
+                                </linearGradient>
+                            </defs>
+                            <!-- Headband -->
+                            <path d="M100,250 C100,100 400,100 400,250" stroke="url(#primary-grad)" stroke-width="24" stroke-linecap="round" fill="none"/>
+                            <path d="M110,240 C110,110 390,110 390,240" stroke="url(#metal-grad)" stroke-width="6" stroke-linecap="round" fill="none"/>
+                            <!-- Extenders -->
+                            <rect x="86" y="230" width="16" height="50" rx="8" fill="url(#metal-grad)" />
+                            <rect x="398" y="230" width="16" height="50" rx="8" fill="url(#metal-grad)" />
+                            <!-- Earpad holders -->
+                            <path d="M70,270 C70,270 60,330 94,360" stroke="url(#primary-grad)" stroke-width="12" stroke-linecap="round" fill="none" />
+                            <path d="M430,270 C430,270 440,330 406,360" stroke="url(#primary-grad)" stroke-width="12" stroke-linecap="round" fill="none" />
+                            <!-- Main Ear Cushions -->
+                            <rect x="54" y="260" width="45" height="110" rx="20" fill="#0F172A" />
+                            <rect x="401" y="260" width="45" height="110" rx="20" fill="#0F172A" />
+                            <!-- Metallic Accent Outer Ear Cups -->
+                            <rect x="40" y="280" width="18" height="70" rx="9" fill="url(#primary-grad)" />
+                            <rect x="442" y="280" width="18" height="70" rx="9" fill="url(#primary-grad)" />
+                            <!-- Stylized glowing dynamic lines representing audio wave -->
+                            <path d="M180,250 Q210,210 250,250 T320,250" stroke="#06B6D4" stroke-width="4" stroke-linecap="round" fill="none" class="animate-pulse" />
+                            <path d="M160,250 Q205,180 250,250 T340,250" stroke="#2563EB" stroke-width="2" stroke-dasharray="6 6" stroke-linecap="round" fill="none" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 3. BRANDS MARQUEE BAR -->
+        <section class="py-12 bg-white border-y border-slate-100 overflow-hidden">
+            <div class="max-w-7xl mx-auto px-6 md:px-12 mb-6 text-center">
+                <p class="text-xs uppercase tracking-widest text-lightText font-semibold">Trusted Brands We Carry</p>
+            </div>
+            <div class="marquee-container w-full relative">
+                <!-- Fade overlays -->
+                <div class="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-white to-transparent z-10"></div>
+                <div class="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-white to-transparent z-10"></div>
+                
+                <div class="marquee-content flex items-center space-x-16 md:space-x-24">
+                    <!-- Brand items (repeated twice to form infinite seamless carousel) -->
+                    <span class="text-2xl md:text-3xl font-display text-slate-300 hover:text-primary transition-colors cursor-pointer"><i class="fa-solid fa-volume-high mr-2"></i>SONY</span>
+                    <span class="text-2xl md:text-3xl font-display text-slate-300 hover:text-primary transition-colors cursor-pointer"><i class="fa-solid fa-music mr-2"></i>BOSE</span>
+                    <span class="text-2xl md:text-3xl font-display text-slate-300 hover:text-primary transition-colors cursor-pointer"><i class="fa-solid fa-wave-square mr-2"></i>JBL</span>
+                    <span class="text-2xl md:text-3xl font-display text-slate-300 hover:text-primary transition-colors cursor-pointer"><i class="fa-brands fa-apple mr-2"></i>APPLE</span>
+                    <span class="text-2xl md:text-3xl font-display text-slate-300 hover:text-primary transition-colors cursor-pointer"><i class="fa-solid fa-headphones-simple mr-2"></i>SENNHEISER</span>
+                    <span class="text-2xl md:text-3xl font-display text-slate-300 hover:text-primary transition-colors cursor-pointer"><i class="fa-solid fa-drum mr-2"></i>BANG & OLUFSEN</span>
+                    <span class="text-2xl md:text-3xl font-display text-slate-300 hover:text-primary transition-colors cursor-pointer"><i class="fa-solid fa-radio mr-2"></i>BEATS</span>
+                    
+                    <!-- Repeat for seamless transition -->
+                    <span class="text-2xl md:text-3xl font-display text-slate-300 hover:text-primary transition-colors cursor-pointer"><i class="fa-solid fa-volume-high mr-2"></i>SONY</span>
+                    <span class="text-2xl md:text-3xl font-display text-slate-300 hover:text-primary transition-colors cursor-pointer"><i class="fa-solid fa-music mr-2"></i>BOSE</span>
+                    <span class="text-2xl md:text-3xl font-display text-slate-300 hover:text-primary transition-colors cursor-pointer"><i class="fa-solid fa-wave-square mr-2"></i>JBL</span>
+                    <span class="text-2xl md:text-3xl font-display text-slate-300 hover:text-primary transition-colors cursor-pointer"><i class="fa-brands fa-apple mr-2"></i>APPLE</span>
+                    <span class="text-2xl md:text-3xl font-display text-slate-300 hover:text-primary transition-colors cursor-pointer"><i class="fa-solid fa-headphones-simple mr-2"></i>SENNHEISER</span>
+                    <span class="text-2xl md:text-3xl font-display text-slate-300 hover:text-primary transition-colors cursor-pointer"><i class="fa-solid fa-drum mr-2"></i>BANG & OLUFSEN</span>
+                    <span class="text-2xl md:text-3xl font-display text-slate-300 hover:text-primary transition-colors cursor-pointer"><i class="fa-solid fa-radio mr-2"></i>BEATS</span>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 4. FEATURED PRODUCTS SECTION -->
+        <section id="products" class="py-24 max-w-7xl mx-auto px-6 md:px-12 reveal">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12">
+                <div>
+                    <span class="text-primary text-xs font-semibold uppercase tracking-widest block mb-2">Curated Acoustics</span>
+                    <h2 class="text-3xl md:text-4xl text-darkText relative inline-block">
+                        Featured Products
+                        <span class="absolute left-0 bottom-[-8px] h-1 w-1/3 bg-primary rounded-full"></span>
+                    </h2>
+                </div>
+                <a href="#products" class="mt-4 md:mt-0 inline-flex items-center space-x-1 text-primary text-sm font-semibold hover:text-primaryDark transition-colors group">
+                    <span>See All Products</span>
+                    <i class="fa-solid fa-arrow-right transition-transform group-hover:translate-x-1"></i>
+                </a>
+            </div>
+
+            <!-- Product Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Product Card 1 -->
+                <div class="tilt-card relative group flex flex-col justify-between glass-card rounded-2xl p-6 overflow-hidden h-[480px]" data-id="1" data-name="Apex Pro X1" data-price="299.99">
+                    <!-- Badging/Actions Header -->
+                    <div class="flex justify-between items-center z-10 relative">
+                        <span class="bg-primary text-white text-xs px-3 py-1.5 rounded-full font-bold uppercase tracking-wider">New</span>
+                        <button class="wishlist-btn bg-white hover:bg-rose-50 text-lightText hover:text-rose-500 w-10 h-10 rounded-full flex items-center justify-center transition-colors shadow-sm focus:outline-none">
+                            <i class="fa-regular fa-heart text-base"></i>
+                        </button>
+                    </div>
+
+                    <!-- Inner Tilting Content -->
+                    <div class="tilt-inner flex-1 flex flex-col justify-between pt-6">
+                        <!-- Product Visual Image Wrapper -->
+                        <div class="h-44 w-full flex items-center justify-center relative mb-4 transition-transform duration-500 group-hover:scale-105">
+                            <div class="absolute w-32 h-32 bg-gradient-to-tr from-primary/10 to-accent/10 rounded-full blur-xl"></div>
+                            <!-- Styled vector placeholder represent sound product -->
+                            <i class="fa-solid fa-headphones text-6xl text-primary drop-shadow-md"></i>
+                        </div>
+
+                        <!-- Card Body -->
+                        <div class="space-y-2 relative z-10 bg-white/40 p-3 rounded-xl backdrop-blur-xs">
+                            <span class="text-[10px] uppercase font-bold tracking-widest text-accent">Headphones</span>
+                            <h3 class="text-lg text-darkText group-hover:text-primary transition-colors">Apex Pro X1</h3>
+                            <div class="flex items-center justify-between">
+                                <div class="flex text-gold text-xs space-x-1">
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                </div>
+                                <span class="text-primary font-bold text-lg">$299.99</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide-up Add to Cart Layer -->
+                    <div class="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-white via-white/95 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex items-end">
+                        <button class="add-to-cart-btn w-full py-3.5 bg-primary text-white font-semibold rounded-xl hover:bg-primaryDark transition-all shadow-md flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-cart-plus"></i>
+                            <span>Add to Cart</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product Card 2 -->
+                <div class="tilt-card relative group flex flex-col justify-between glass-card rounded-2xl p-6 overflow-hidden h-[480px]" data-id="2" data-name="Studio Elite 500" data-price="349.99">
+                    <div class="flex justify-between items-center z-10 relative">
+                        <span class="bg-gold text-white text-xs px-3 py-1.5 rounded-full font-bold uppercase tracking-wider">Popular</span>
+                        <button class="wishlist-btn bg-white hover:bg-rose-50 text-lightText hover:text-rose-500 w-10 h-10 rounded-full flex items-center justify-center transition-colors shadow-sm focus:outline-none">
+                            <i class="fa-regular fa-heart text-base"></i>
+                        </button>
+                    </div>
+
+                    <div class="tilt-inner flex-1 flex flex-col justify-between pt-6">
+                        <div class="h-44 w-full flex items-center justify-center relative mb-4 transition-transform duration-500 group-hover:scale-105">
+                            <div class="absolute w-32 h-32 bg-gradient-to-tr from-violet-500/10 to-primary/10 rounded-full blur-xl"></div>
+                            <i class="fa-solid fa-headphones-simple text-6xl text-violet-600 drop-shadow-md"></i>
+                        </div>
+
+                        <div class="space-y-2 relative z-10 bg-white/40 p-3 rounded-xl backdrop-blur-xs">
+                            <span class="text-[10px] uppercase font-bold tracking-widest text-accent">Headphones</span>
+                            <h3 class="text-lg text-darkText group-hover:text-primary transition-colors">Studio Elite 500</h3>
+                            <div class="flex items-center justify-between">
+                                <div class="flex text-gold text-xs space-x-1">
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star-half-stroke"></i>
+                                </div>
+                                <span class="text-primary font-bold text-lg">$349.99</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-white via-white/95 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex items-end">
+                        <button class="add-to-cart-btn w-full py-3.5 bg-primary text-white font-semibold rounded-xl hover:bg-primaryDark transition-all shadow-md flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-cart-plus"></i>
+                            <span>Add to Cart</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product Card 3 -->
+                <div class="tilt-card relative group flex flex-col justify-between glass-card rounded-2xl p-6 overflow-hidden h-[480px]" data-id="3" data-name="BassCore Y200" data-price="129.99">
+                    <div class="flex justify-between items-center z-10 relative">
+                        <span class="bg-red-500 text-white text-xs px-3 py-1.5 rounded-full font-bold uppercase tracking-wider">Sale</span>
+                        <button class="wishlist-btn bg-white hover:bg-rose-50 text-lightText hover:text-rose-500 w-10 h-10 rounded-full flex items-center justify-center transition-colors shadow-sm focus:outline-none">
+                            <i class="fa-regular fa-heart text-base"></i>
+                        </button>
+                    </div>
+
+                    <div class="tilt-inner flex-1 flex flex-col justify-between pt-6">
+                        <div class="h-44 w-full flex items-center justify-center relative mb-4 transition-transform duration-500 group-hover:scale-105">
+                            <div class="absolute w-32 h-32 bg-gradient-to-tr from-cyan-500/10 to-primary/10 rounded-full blur-xl"></div>
+                            <i class="fa-solid fa-volume-high text-6xl text-cyan-500 drop-shadow-md"></i>
+                        </div>
+
+                        <div class="space-y-2 relative z-10 bg-white/40 p-3 rounded-xl backdrop-blur-xs">
+                            <span class="text-[10px] uppercase font-bold tracking-widest text-accent">Wireless Earbuds</span>
+                            <h3 class="text-lg text-darkText group-hover:text-primary transition-colors">BassCore Y200</h3>
+                            <div class="flex items-center justify-between">
+                                <div class="flex text-gold text-xs space-x-1">
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-regular fa-star"></i>
+                                </div>
+                                <span class="text-primary font-bold text-lg">$129.99</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-white via-white/95 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex items-end">
+                        <button class="add-to-cart-btn w-full py-3.5 bg-primary text-white font-semibold rounded-xl hover:bg-primaryDark transition-all shadow-md flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-cart-plus"></i>
+                            <span>Add to Cart</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product Card 4 -->
+                <div class="tilt-card relative group flex flex-col justify-between glass-card rounded-2xl p-6 overflow-hidden h-[480px]" data-id="4" data-name="AirPod Ultra Lite" data-price="199.99">
+                    <div class="flex justify-between items-center z-10 relative">
+                        <span class="text-transparent px-3 py-1.5 rounded-full font-bold"></span>
+                        <button class="wishlist-btn bg-white hover:bg-rose-50 text-lightText hover:text-rose-500 w-10 h-10 rounded-full flex items-center justify-center transition-colors shadow-sm focus:outline-none">
+                            <i class="fa-regular fa-heart text-base"></i>
+                        </button>
+                    </div>
+
+                    <div class="tilt-inner flex-1 flex flex-col justify-between pt-6">
+                        <div class="h-44 w-full flex items-center justify-center relative mb-4 transition-transform duration-500 group-hover:scale-105">
+                            <div class="absolute w-32 h-32 bg-gradient-to-tr from-emerald-500/10 to-primary/10 rounded-full blur-xl"></div>
+                            <!-- Earbud representation SVG -->
+                            <i class="fa-solid fa-circle-nodes text-6xl text-emerald-500 drop-shadow-md"></i>
+                        </div>
+
+                        <div class="space-y-2 relative z-10 bg-white/40 p-3 rounded-xl backdrop-blur-xs">
+                            <span class="text-[10px] uppercase font-bold tracking-widest text-accent">Wireless Earbuds</span>
+                            <h3 class="text-lg text-darkText group-hover:text-primary transition-colors">AirPod Ultra Lite</h3>
+                            <div class="flex items-center justify-between">
+                                <div class="flex text-gold text-xs space-x-1">
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                </div>
+                                <span class="text-primary font-bold text-lg">$199.99</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-white via-white/95 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex items-end">
+                        <button class="add-to-cart-btn w-full py-3.5 bg-primary text-white font-semibold rounded-xl hover:bg-primaryDark transition-all shadow-md flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-cart-plus"></i>
+                            <span>Add to Cart</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product Card 5 -->
+                <div class="tilt-card relative group flex flex-col justify-between glass-card rounded-2xl p-6 overflow-hidden h-[480px]" data-id="5" data-name="SoundWave Mini" data-price="89.99">
+                    <div class="flex justify-between items-center z-10 relative">
+                        <span class="bg-primary text-white text-xs px-3 py-1.5 rounded-full font-bold uppercase tracking-wider">Best Price</span>
+                        <button class="wishlist-btn bg-white hover:bg-rose-50 text-lightText hover:text-rose-500 w-10 h-10 rounded-full flex items-center justify-center transition-colors shadow-sm focus:outline-none">
+                            <i class="fa-regular fa-heart text-base"></i>
+                        </button>
+                    </div>
+
+                    <div class="tilt-inner flex-1 flex flex-col justify-between pt-6">
+                        <div class="h-44 w-full flex items-center justify-center relative mb-4 transition-transform duration-500 group-hover:scale-105">
+                            <div class="absolute w-32 h-32 bg-gradient-to-tr from-amber-500/10 to-primary/10 rounded-full blur-xl"></div>
+                            <i class="fa-solid fa-radio text-6xl text-amber-500 drop-shadow-md"></i>
+                        </div>
+
+                        <div class="space-y-2 relative z-10 bg-white/40 p-3 rounded-xl backdrop-blur-xs">
+                            <span class="text-[10px] uppercase font-bold tracking-widest text-accent">Accessories</span>
+                            <h3 class="text-lg text-darkText group-hover:text-primary transition-colors">SoundWave Mini</h3>
+                            <div class="flex items-center justify-between">
+                                <div class="flex text-gold text-xs space-x-1">
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star-half-stroke"></i>
+                                </div>
+                                <span class="text-primary font-bold text-lg">$89.99</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-white via-white/95 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex items-end">
+                        <button class="add-to-cart-btn w-full py-3.5 bg-primary text-white font-semibold rounded-xl hover:bg-primaryDark transition-all shadow-md flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-cart-plus"></i>
+                            <span>Add to Cart</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product Card 6 -->
+                <div class="tilt-card relative group flex flex-col justify-between glass-card rounded-2xl p-6 overflow-hidden h-[480px]" data-id="6" data-name="ProStudio 360" data-price="450.00">
+                    <div class="flex justify-between items-center z-10 relative">
+                        <span class="bg-amber-600 text-white text-xs px-3 py-1.5 rounded-full font-bold uppercase tracking-wider">Signature</span>
+                        <button class="wishlist-btn bg-white hover:bg-rose-50 text-lightText hover:text-rose-500 w-10 h-10 rounded-full flex items-center justify-center transition-colors shadow-sm focus:outline-none">
+                            <i class="fa-regular fa-heart text-base"></i>
+                        </button>
+                    </div>
+
+                    <div class="tilt-inner flex-1 flex flex-col justify-between pt-6">
+                        <div class="h-44 w-full flex items-center justify-center relative mb-4 transition-transform duration-500 group-hover:scale-105">
+                            <div class="absolute w-32 h-32 bg-gradient-to-tr from-rose-500/10 to-primary/10 rounded-full blur-xl"></div>
+                            <i class="fa-solid fa-drum text-6xl text-rose-500 drop-shadow-md"></i>
+                        </div>
+
+                        <div class="space-y-2 relative z-10 bg-white/40 p-3 rounded-xl backdrop-blur-xs">
+                            <span class="text-[10px] uppercase font-bold tracking-widest text-accent">Over-Ear Studio</span>
+                            <h3 class="text-lg text-darkText group-hover:text-primary transition-colors">ProStudio 360</h3>
+                            <div class="flex items-center justify-between">
+                                <div class="flex text-gold text-xs space-x-1">
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                </div>
+                                <span class="text-primary font-bold text-lg">$450.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-white via-white/95 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex items-end">
+                        <button class="add-to-cart-btn w-full py-3.5 bg-primary text-white font-semibold rounded-xl hover:bg-primaryDark transition-all shadow-md flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-cart-plus"></i>
+                            <span>Add to Cart</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- 5. CATEGORIES SECTION -->
+        <section id="categories" class="py-24 bg-slate-50 border-y border-slate-100 reveal">
+            <div class="max-w-7xl mx-auto px-6 md:px-12">
+                <div class="flex justify-between items-end mb-12">
+                    <div>
+                        <span class="text-primary text-xs font-semibold uppercase tracking-widest block mb-2">Sonic Classifications</span>
+                        <h2 class="text-3xl md:text-4xl text-darkText relative inline-block">
+                            Shop By Category
+                            <span class="absolute left-0 bottom-[-8px] h-1 w-1/3 bg-primary rounded-full"></span>
+                        </h2>
+                    </div>
+                    <!-- Left/Right navigation for scroll -->
+                    <div class="flex space-x-2">
+                        <button id="cat-prev-btn" class="w-10 h-10 rounded-full border border-slate-200 bg-white text-darkText hover:bg-primary hover:text-white hover:border-primary transition-colors flex items-center justify-center">
+                            <i class="fa-solid fa-chevron-left text-sm"></i>
+                        </button>
+                        <button id="cat-next-btn" class="w-10 h-10 rounded-full border border-slate-200 bg-white text-darkText hover:bg-primary hover:text-white hover:border-primary transition-colors flex items-center justify-center">
+                            <i class="fa-solid fa-chevron-right text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Horizontal categories track -->
+                <div id="cat-scroll-track" class="flex overflow-x-auto space-x-6 pb-6 no-scrollbar scroll-smooth">
+                    
+                    <!-- Category Card 1 -->
+                    <div class="flex-none w-72 md:w-80 group cursor-pointer">
+                        <div class="relative h-64 rounded-2xl overflow-hidden bg-gradient-to-tr from-primary to-accent p-6 flex flex-col justify-between text-white transition-all duration-300 group-hover:shadow-lg group-hover:shadow-primary/20 group-hover:scale-[1.02]">
+                            <!-- Glow highlight on border -->
+                            <div class="absolute inset-0 border-2 border-transparent group-hover:border-white/30 rounded-2xl transition-all duration-300"></div>
+                            <div class="text-3xl"><i class="fa-solid fa-headphones"></i></div>
+                            <div>
+                                <h3 class="text-xl font-display mb-1">HEADPHONES</h3>
+                                <p class="text-xs text-white/80 font-light mb-4">Studio monitors, over-ear & noise cancelling.</p>
+                                <span class="text-xs font-semibold uppercase tracking-wider inline-flex items-center space-x-1 group-hover:translate-x-1 transition-transform">
+                                    <span>View All</span> <i class="fa-solid fa-arrow-right"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Category Card 2 -->
+                    <div class="flex-none w-72 md:w-80 group cursor-pointer">
+                        <div class="relative h-64 rounded-2xl overflow-hidden bg-gradient-to-tr from-violet-600 to-indigo-800 p-6 flex flex-col justify-between text-white transition-all duration-300 group-hover:shadow-lg group-hover:shadow-violet-600/20 group-hover:scale-[1.02]">
+                            <div class="absolute inset-0 border-2 border-transparent group-hover:border-white/30 rounded-2xl transition-all duration-300"></div>
+                            <div class="text-3xl"><i class="fa-solid fa-circle-nodes"></i></div>
+                            <div>
+                                <h3 class="text-xl font-display mb-1">EARBUDS</h3>
+                                <p class="text-xs text-white/80 font-light mb-4">True wireless, workout fits & ultra portable.</p>
+                                <span class="text-xs font-semibold uppercase tracking-wider inline-flex items-center space-x-1 group-hover:translate-x-1 transition-transform">
+                                    <span>View All</span> <i class="fa-solid fa-arrow-right"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Category Card 3 -->
+                    <div class="flex-none w-72 md:w-80 group cursor-pointer">
+                        <div class="relative h-64 rounded-2xl overflow-hidden bg-gradient-to-tr from-emerald-600 to-teal-800 p-6 flex flex-col justify-between text-white transition-all duration-300 group-hover:shadow-lg group-hover:shadow-emerald-600/20 group-hover:scale-[1.02]">
+                            <div class="absolute inset-0 border-2 border-transparent group-hover:border-white/30 rounded-2xl transition-all duration-300"></div>
+                            <div class="text-3xl"><i class="fa-solid fa-volume-high"></i></div>
+                            <div>
+                                <h3 class="text-xl font-display mb-1">SPEAKERS</h3>
+                                <p class="text-xs text-white/80 font-light mb-4">Bluetooth portable, home theater & smart hubs.</p>
+                                <span class="text-xs font-semibold uppercase tracking-wider inline-flex items-center space-x-1 group-hover:translate-x-1 transition-transform">
+                                    <span>View All</span> <i class="fa-solid fa-arrow-right"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Category Card 4 -->
+                    <div class="flex-none w-72 md:w-80 group cursor-pointer">
+                        <div class="relative h-64 rounded-2xl overflow-hidden bg-gradient-to-tr from-rose-600 to-amber-700 p-6 flex flex-col justify-between text-white transition-all duration-300 group-hover:shadow-lg group-hover:shadow-rose-600/20 group-hover:scale-[1.02]">
+                            <div class="absolute inset-0 border-2 border-transparent group-hover:border-white/30 rounded-2xl transition-all duration-300"></div>
+                            <div class="text-3xl"><i class="fa-solid fa-plug"></i></div>
+                            <div>
+                                <h3 class="text-xl font-display mb-1">ACCESSORIES</h3>
+                                <p class="text-xs text-white/80 font-light mb-4">Cables, cases, charging pads & adapters.</p>
+                                <span class="text-xs font-semibold uppercase tracking-wider inline-flex items-center space-x-1 group-hover:translate-x-1 transition-transform">
+                                    <span>View All</span> <i class="fa-solid fa-arrow-right"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Category Card 5 -->
+                    <div class="flex-none w-72 md:w-80 group cursor-pointer">
+                        <div class="relative h-64 rounded-2xl overflow-hidden bg-gradient-to-tr from-cyan-600 to-blue-800 p-6 flex flex-col justify-between text-white transition-all duration-300 group-hover:shadow-lg group-hover:shadow-cyan-600/20 group-hover:scale-[1.02]">
+                            <div class="absolute inset-0 border-2 border-transparent group-hover:border-white/30 rounded-2xl transition-all duration-300"></div>
+                            <div class="text-3xl"><i class="fa-solid fa-bolt"></i></div>
+                            <div>
+                                <h3 class="text-xl font-display mb-1">WIRELESS CHARGERS</h3>
+                                <p class="text-xs text-white/80 font-light mb-4">Fast wireless stands & multi-device hubs.</p>
+                                <span class="text-xs font-semibold uppercase tracking-wider inline-flex items-center space-x-1 group-hover:translate-x-1 transition-transform">
+                                    <span>View All</span> <i class="fa-solid fa-arrow-right"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 6. PROMOTIONAL BANNER -->
+        <section class="py-24 bg-gradient-to-r from-primaryDark via-primary to-accent text-white overflow-hidden relative reveal">
+            <!-- Graphical abstract background rings -->
+            <div class="absolute -top-24 -left-24 w-96 h-96 border-4 border-white/10 rounded-full animate-pulse"></div>
+            <div class="absolute -bottom-24 -right-24 w-96 h-96 border-4 border-white/10 rounded-full"></div>
+
+            <div class="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
+                
+                <!-- Left promo info -->
+                <div class="space-y-6 text-center lg:text-left">
+                    <span class="inline-block px-4 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold tracking-widest uppercase">
+                        🔥 Limited Time Offer
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl leading-tight">
+                        Up to 40% Off Premium Headphones
+                    </h2>
+                    <p class="text-white/80 font-light max-w-lg mx-auto lg:mx-0">
+                        Experience acoustic bliss without paying premium brand tax. Act fast, this special campaign closes in:
+                    </p>
+
+                    <!-- Countdown Timer -->
+                    <div id="countdown" class="grid grid-cols-4 gap-4 max-w-sm mx-auto lg:mx-0 pt-4">
+                        <div class="bg-white/10 backdrop-blur-md rounded-xl p-3 text-center border border-white/10">
+                            <span id="days" class="block text-2xl md:text-3xl font-display">00</span>
+                            <span class="text-[10px] text-white/60 uppercase tracking-widest font-semibold">Days</span>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-md rounded-xl p-3 text-center border border-white/10">
+                            <span id="hours" class="block text-2xl md:text-3xl font-display">00</span>
+                            <span class="text-[10px] text-white/60 uppercase tracking-widest font-semibold">Hours</span>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-md rounded-xl p-3 text-center border border-white/10">
+                            <span id="minutes" class="block text-2xl md:text-3xl font-display">00</span>
+                            <span class="text-[10px] text-white/60 uppercase tracking-widest font-semibold">Mins</span>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-md rounded-xl p-3 text-center border border-white/10">
+                            <span id="seconds" class="block text-2xl md:text-3xl font-display">00</span>
+                            <span class="text-[10px] text-white/60 uppercase tracking-widest font-semibold">Secs</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-6">
+                        <a href="#products" class="inline-flex items-center justify-center px-8 py-4 bg-white text-primary font-bold uppercase tracking-wider rounded-full hover:bg-slate-100 shadow-xl hover:shadow-2xl transition-all group overflow-hidden relative">
+                            <!-- Shimmer beam effect -->
+                            <span class="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white/40 opacity-40 animate-shimmer"></span>
+                            <span class="relative z-10 flex items-center space-x-2">
+                                <span>Shop the Sale</span>
+                                <i class="fa-solid fa-arrow-right transition-transform group-hover:translate-x-1"></i>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right abstract item visuals -->
+                <div class="flex justify-center items-center py-6 lg:py-0">
+                    <div class="relative w-64 h-64 md:w-80 md:h-80 flex items-center justify-center float-anim">
+                        <div class="absolute inset-0 bg-white/10 rounded-full blur-2xl"></div>
+                        <!-- Beautiful stylized abstract vector earbud representation -->
+                        <svg class="w-full h-full drop-shadow-[0_20px_20px_rgba(255,255,255,0.2)]" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="white-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#FFFFFF" />
+                                    <stop offset="100%" stop-color="#E2E8F0" />
+                                </linearGradient>
+                            </defs>
+                            <!-- Ambient audio waves -->
+                            <circle cx="250" cy="250" r="180" stroke="white" stroke-opacity="0.1" stroke-width="2" />
+                            <circle cx="250" cy="250" r="140" stroke="white" stroke-opacity="0.2" stroke-width="4" stroke-dasharray="10 10" />
+                            
+                            <!-- Case -->
+                            <rect x="150" y="150" width="200" height="200" rx="60" fill="url(#white-grad)" />
+                            <!-- Brand branding on the casing -->
+                            <rect x="235" y="240" width="30" height="30" rx="15" fill="#2563EB" class="animate-pulse" />
+                            <circle cx="250" cy="255" r="5" fill="white" />
+                        </svg>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- 7. BEST SELLERS SECTION -->
+        <section class="py-24 max-w-7xl mx-auto px-6 md:px-12 reveal">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-primary text-xs font-semibold uppercase tracking-widest block mb-2">Crowd Favorites</span>
+                <h2 class="text-3xl md:text-4xl text-darkText inline-block relative">
+                    Best Sellers This Week
+                    <span class="absolute left-1/3 bottom-[-8px] h-1 w-1/3 bg-primary rounded-full"></span>
+                </h2>
+                <p class="text-lightText mt-4 font-light">
+                    Join over 50,000 audiophiles who have upgraded their audio standard using our leading solutions.
+                </p>
+            </div>
+
+            <!-- 4 Column Best Seller Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                
+                <!-- Best Seller 1 -->
+                <div class="tilt-card relative group flex flex-col justify-between glass-card rounded-2xl p-6 overflow-hidden h-[440px]" data-id="7" data-name="Apex Pro Max" data-price="399.99">
+                    <!-- Gold Best Seller Label -->
+                    <div class="flex justify-between items-center z-10 relative">
+                        <span class="bg-gold text-white text-[10px] px-3 py-1.5 rounded-full font-bold uppercase tracking-wider shadow-sm flex items-center space-x-1">
+                            <i class="fa-solid fa-crown"></i>
+                            <span>#1 Best Seller</span>
+                        </span>
+                        <button class="wishlist-btn bg-white hover:bg-rose-50 text-lightText hover:text-rose-500 w-8 h-8 rounded-full flex items-center justify-center transition-colors shadow-sm focus:outline-none">
+                            <i class="fa-regular fa-heart text-sm"></i>
+                        </button>
+                    </div>
+
+                    <div class="tilt-inner flex-1 flex flex-col justify-between pt-4">
+                        <div class="h-36 w-full flex items-center justify-center relative mb-4 transition-transform duration-500 group-hover:scale-105">
+                            <div class="absolute w-24 h-24 bg-gradient-to-tr from-gold/20 to-primary/10 rounded-full blur-xl"></div>
+                            <i class="fa-solid fa-headphones text-5xl text-gold drop-shadow-md"></i>
+                        </div>
+
+                        <div class="space-y-1.5 relative z-10 bg-white/40 p-2.5 rounded-xl backdrop-blur-xs">
+                            <span class="text-[9px] uppercase font-bold tracking-widest text-accent">Headphones</span>
+                            <h3 class="text-base text-darkText group-hover:text-primary transition-colors">Apex Pro Max</h3>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs text-lightText font-semibold"><span class="counter" data-target="2450">0</span> Sold</span>
+                                <span class="text-primary font-bold text-base">$399.99</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-white via-white/95 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex items-end">
+                        <button class="add-to-cart-btn w-full py-2.5 bg-primary text-white font-semibold rounded-xl hover:bg-primaryDark transition-all shadow-md flex items-center justify-center space-x-2 text-xs">
+                            <i class="fa-solid fa-cart-plus"></i>
+                            <span>Add to Cart</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Best Seller 2 -->
+                <div class="tilt-card relative group flex flex-col justify-between glass-card rounded-2xl p-6 overflow-hidden h-[440px]" data-id="8" data-name="BassCore Air" data-price="149.99">
+                    <div class="flex justify-between items-center z-10 relative">
+                        <span class="bg-slate-400 text-white text-[10px] px-3 py-1.5 rounded-full font-bold uppercase tracking-wider shadow-sm flex items-center space-x-1">
+                            <i class="fa-solid fa-crown"></i>
+                            <span>#2 Seller</span>
+                        </span>
+                        <button class="wishlist-btn bg-white hover:bg-rose-50 text-lightText hover:text-rose-500 w-8 h-8 rounded-full flex items-center justify-center transition-colors shadow-sm focus:outline-none">
+                            <i class="fa-regular fa-heart text-sm"></i>
+                        </button>
+                    </div>
+
+                    <div class="tilt-inner flex-1 flex flex-col justify-between pt-4">
+                        <div class="h-36 w-full flex items-center justify-center relative mb-4 transition-transform duration-500 group-hover:scale-105">
+                            <div class="absolute w-24 h-24 bg-gradient-to-tr from-slate-400/20 to-primary/10 rounded-full blur-xl"></div>
+                            <i class="fa-solid fa-circle-nodes text-5xl text-slate-500 drop-shadow-md"></i>
+                        </div>
+
+                        <div class="space-y-1.5 relative z-10 bg-white/40 p-2.5 rounded-xl backdrop-blur-xs">
+                            <span class="text-[9px] uppercase font-bold tracking-widest text-accent">Wireless Earbuds</span>
+                            <h3 class="text-base text-darkText group-hover:text-primary transition-colors">BassCore Air</h3>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs text-lightText font-semibold"><span class="counter" data-target="1890">0</span> Sold</span>
+                                <span class="text-primary font-bold text-base">$149.99</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-white via-white/95 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex items-end">
+                        <button class="add-to-cart-btn w-full py-2.5 bg-primary text-white font-semibold rounded-xl hover:bg-primaryDark transition-all shadow-md flex items-center justify-center space-x-2 text-xs">
+                            <i class="fa-solid fa-cart-plus"></i>
+                            <span>Add to Cart</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Best Seller 3 -->
+                <div class="tilt-card relative group flex flex-col justify-between glass-card rounded-2xl p-6 overflow-hidden h-[440px]" data-id="9" data-name="SoundWave Mini II" data-price="99.99">
+                    <div class="flex justify-between items-center z-10 relative">
+                        <span class="bg-amber-700/80 text-white text-[10px] px-3 py-1.5 rounded-full font-bold uppercase tracking-wider shadow-sm flex items-center space-x-1">
+                            <i class="fa-solid fa-crown"></i>
+                            <span>#3 Seller</span>
+                        </span>
+                        <button class="wishlist-btn bg-white hover:bg-rose-50 text-lightText hover:text-rose-500 w-8 h-8 rounded-full flex items-center justify-center transition-colors shadow-sm focus:outline-none">
+                            <i class="fa-regular fa-heart text-sm"></i>
+                        </button>
+                    </div>
+
+                    <div class="tilt-inner flex-1 flex flex-col justify-between pt-4">
+                        <div class="h-36 w-full flex items-center justify-center relative mb-4 transition-transform duration-500 group-hover:scale-105">
+                            <div class="absolute w-24 h-24 bg-gradient-to-tr from-amber-700/20 to-primary/10 rounded-full blur-xl"></div>
+                            <i class="fa-solid fa-volume-high text-5xl text-amber-700 drop-shadow-md"></i>
+                        </div>
+
+                        <div class="space-y-1.5 relative z-10 bg-white/40 p-2.5 rounded-xl backdrop-blur-xs">
+                            <span class="text-[9px] uppercase font-bold tracking-widest text-accent">Speakers</span>
+                            <h3 class="text-base text-darkText group-hover:text-primary transition-colors">SoundWave Mini II</h3>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs text-lightText font-semibold"><span class="counter" data-target="1520">0</span> Sold</span>
+                                <span class="text-primary font-bold text-base">$99.99</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-white via-white/95 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex items-end">
+                        <button class="add-to-cart-btn w-full py-2.5 bg-primary text-white font-semibold rounded-xl hover:bg-primaryDark transition-all shadow-md flex items-center justify-center space-x-2 text-xs">
+                            <i class="fa-solid fa-cart-plus"></i>
+                            <span>Add to Cart</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Best Seller 4 -->
+                <div class="tilt-card relative group flex flex-col justify-between glass-card rounded-2xl p-6 overflow-hidden h-[440px]" data-id="10" data-name="Studio Elite Classic" data-price="279.99">
+                    <div class="flex justify-between items-center z-10 relative">
+                        <span class="bg-primary/80 text-white text-[10px] px-3 py-1.5 rounded-full font-bold uppercase tracking-wider shadow-sm flex items-center space-x-1">
+                            <i class="fa-solid fa-crown"></i>
+                            <span>#4 Seller</span>
+                        </span>
+                        <button class="wishlist-btn bg-white hover:bg-rose-50 text-lightText hover:text-rose-500 w-8 h-8 rounded-full flex items-center justify-center transition-colors shadow-sm focus:outline-none">
+                            <i class="fa-regular fa-heart text-sm"></i>
+                        </button>
+                    </div>
+
+                    <div class="tilt-inner flex-1 flex flex-col justify-between pt-4">
+                        <div class="h-36 w-full flex items-center justify-center relative mb-4 transition-transform duration-500 group-hover:scale-105">
+                            <div class="absolute w-24 h-24 bg-gradient-to-tr from-primary/20 to-accent/10 rounded-full blur-xl"></div>
+                            <i class="fa-solid fa-headphones-simple text-5xl text-primary/80 drop-shadow-md"></i>
+                        </div>
+
+                        <div class="space-y-1.5 relative z-10 bg-white/40 p-2.5 rounded-xl backdrop-blur-xs">
+                            <span class="text-[9px] uppercase font-bold tracking-widest text-accent">Headphones</span>
+                            <h3 class="text-base text-darkText group-hover:text-primary transition-colors">Studio Elite Classic</h3>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs text-lightText font-semibold"><span class="counter" data-target="1200">0</span> Sold</span>
+                                <span class="text-primary font-bold text-base">$279.99</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-white via-white/95 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex items-end">
+                        <button class="add-to-cart-btn w-full py-2.5 bg-primary text-white font-semibold rounded-xl hover:bg-primaryDark transition-all shadow-md flex items-center justify-center space-x-2 text-xs">
+                            <i class="fa-solid fa-cart-plus"></i>
+                            <span>Add to Cart</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- 8. WHY CHOOSE US (FEATURES) -->
+        <section id="why-choose-us" class="py-24 bg-white border-t border-slate-100 reveal">
+            <div class="max-w-7xl mx-auto px-6 md:px-12">
+                <div class="text-center max-w-2xl mx-auto mb-16">
+                    <span class="text-primary text-xs font-semibold uppercase tracking-widest block mb-2">Our Commitments</span>
+                    <h2 class="text-3xl md:text-4xl text-darkText relative inline-block">
+                        Why Choose Crescendo
+                        <span class="absolute left-1/4 bottom-[-8px] h-1 w-1/2 bg-primary rounded-full"></span>
+                    </h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    
+                    <!-- Feature 1 -->
+                    <div class="glass-card rounded-2xl p-8 text-center space-y-4 hover:shadow-xl transition-shadow duration-300">
+                        <div class="w-16 h-16 rounded-2xl bg-primaryLight flex items-center justify-center text-primary text-2xl mx-auto transition-transform duration-500 hover:scale-110">
+                            <i class="fa-solid fa-truck-fast animate-bounce-slow"></i>
+                        </div>
+                        <h3 class="text-lg text-darkText font-semibold">Free Delivery</h3>
+                        <p class="text-sm text-lightText font-light leading-relaxed">
+                            Complimentary shipping on all worldwide orders, tracking provided instantly.
+                        </p>
+                    </div>
+
+                    <!-- Feature 2 -->
+                    <div class="glass-card rounded-2xl p-8 text-center space-y-4 hover:shadow-xl transition-shadow duration-300">
+                        <div class="w-16 h-16 rounded-2xl bg-primaryLight flex items-center justify-center text-primary text-2xl mx-auto transition-transform duration-500 hover:scale-110">
+                            <i class="fa-solid fa-arrow-rotate-left"></i>
+                        </div>
+                        <h3 class="text-lg text-darkText font-semibold">Easy Returns</h3>
+                        <p class="text-sm text-lightText font-light leading-relaxed">
+                            Not absolutely thrilled? Enjoy our 30-day effortless satisfaction policy.
+                        </p>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div class="glass-card rounded-2xl p-8 text-center space-y-4 hover:shadow-xl transition-shadow duration-300">
+                        <div class="w-16 h-16 rounded-2xl bg-primaryLight flex items-center justify-center text-primary text-2xl mx-auto transition-transform duration-500 hover:scale-110">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <h3 class="text-lg text-darkText font-semibold">Secure Payment</h3>
+                        <p class="text-sm text-lightText font-light leading-relaxed">
+                            Double layer encryption ensuring your payment and credential security.
+                        </p>
+                    </div>
+
+                    <!-- Feature 4 -->
+                    <div class="glass-card rounded-2xl p-8 text-center space-y-4 hover:shadow-xl transition-shadow duration-300">
+                        <div class="w-16 h-16 rounded-2xl bg-primaryLight flex items-center justify-center text-primary text-2xl mx-auto transition-transform duration-500 hover:scale-110">
+                            <i class="fa-solid fa-headset"></i>
+                        </div>
+                        <h3 class="text-lg text-darkText font-semibold">Expert Support</h3>
+                        <p class="text-sm text-lightText font-light leading-relaxed">
+                            Our team of audio experts is ready to assist you 24 hours, 7 days a week.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 9. TESTIMONIALS / REVIEWS -->
+        <section class="py-24 bg-slate-50 border-t border-slate-100 overflow-hidden reveal">
+            <div class="max-w-7xl mx-auto px-6 md:px-12 text-center relative">
+                
+                <div class="max-w-2xl mx-auto mb-16">
+                    <span class="text-primary text-xs font-semibold uppercase tracking-widest block mb-2">Social Proof</span>
+                    <h2 class="text-3xl md:text-4xl text-darkText relative inline-block">
+                        What Our Customers Say
+                        <span class="absolute left-1/4 bottom-[-8px] h-1 w-1/2 bg-primary rounded-full"></span>
+                    </h2>
+                </div>
+
+                <!-- Testimonial Carousel Track Wrapper -->
+                <div class="relative max-w-4xl mx-auto">
+                    <!-- Carousel Window -->
+                    <div class="overflow-hidden relative h-[320px] md:h-[260px]">
+                        <!-- Carousel Slides Container -->
+                        <div id="testimonial-track" class="flex transition-transform duration-500 h-full">
+                            
+                            <!-- Slide 1 -->
+                            <div class="w-full flex-none px-4 md:px-12 flex flex-col justify-center">
+                                <div class="glass-card rounded-2xl p-8 space-y-4 text-left relative">
+                                    <div class="absolute right-8 top-8 text-primary/10 text-6xl"><i class="fa-solid fa-quote-right"></i></div>
+                                    <div class="flex text-gold space-x-1"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                                    <p class="text-darkText font-light italic leading-relaxed text-sm md:text-base">
+                                        "The clarity on the Apex Pro is absolutely astounding. I hear elements in my favorite tracks that I never knew existed. Simply premium."
+                                    </p>
+                                    <div class="flex items-center space-x-4">
+                                        <div class="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center font-bold text-lg">JS</div>
+                                        <div>
+                                            <h4 class="text-darkText font-semibold text-sm">Jonathan S.</h4>
+                                            <p class="text-xs text-lightText">Boston, MA | Bought Apex Pro X1</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Slide 2 -->
+                            <div class="w-full flex-none px-4 md:px-12 flex flex-col justify-center">
+                                <div class="glass-card rounded-2xl p-8 space-y-4 text-left relative">
+                                    <div class="absolute right-8 top-8 text-primary/10 text-6xl"><i class="fa-solid fa-quote-right"></i></div>
+                                    <div class="flex text-gold space-x-1"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                                    <p class="text-darkText font-light italic leading-relaxed text-sm md:text-base">
+                                        "Unbelievable battery life. I took these on a cross-country flight and used them all week without needing a charge. ANC is incredible."
+                                    </p>
+                                    <div class="flex items-center space-x-4">
+                                        <div class="w-12 h-12 rounded-full bg-accent text-white flex items-center justify-center font-bold text-lg">SM</div>
+                                        <div>
+                                            <h4 class="text-darkText font-semibold text-sm">Sarah M.</h4>
+                                            <p class="text-xs text-lightText">Austin, TX | Bought Studio Elite 500</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Slide 3 -->
+                            <div class="w-full flex-none px-4 md:px-12 flex flex-col justify-center">
+                                <div class="glass-card rounded-2xl p-8 space-y-4 text-left relative">
+                                    <div class="absolute right-8 top-8 text-primary/10 text-6xl"><i class="fa-solid fa-quote-right"></i></div>
+                                    <div class="flex text-gold space-x-1"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                                    <p class="text-darkText font-light italic leading-relaxed text-sm md:text-base">
+                                        "These earbuds are incredible for working out. They stay locked in my ears during intense cardio, and the sweatproof rating is highly reassuring."
+                                    </p>
+                                    <div class="flex items-center space-x-4">
+                                        <div class="w-12 h-12 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-lg">DK</div>
+                                        <div>
+                                            <h4 class="text-darkText font-semibold text-sm">David K.</h4>
+                                            <p class="text-xs text-lightText">Chicago, IL | Bought BassCore Y200</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Pagination Indicators -->
+                    <div class="flex justify-center space-x-2 mt-8" id="carousel-dots">
+                        <button class="w-3 h-3 rounded-full bg-primary transition-all duration-300 focus:outline-none" data-slide="0"></button>
+                        <button class="w-3 h-3 rounded-full bg-slate-300 hover:bg-primary transition-all duration-300 focus:outline-none" data-slide="1"></button>
+                        <button class="w-3 h-3 rounded-full bg-slate-300 hover:bg-primary transition-all duration-300 focus:outline-none" data-slide="2"></button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- 10. NEW ARRIVALS SHOWCASE (Asymmetric) -->
+        <section class="py-24 max-w-7xl mx-auto px-6 md:px-12 reveal">
+            <div class="mb-12">
+                <span class="text-primary text-xs font-semibold uppercase tracking-widest block mb-2">Modern Audio Tech</span>
+                <h2 class="text-3xl md:text-4xl text-darkText relative inline-block">
+                    New Arrivals Showcase
+                    <span class="absolute left-0 bottom-[-8px] h-1 w-1/3 bg-primary rounded-full"></span>
+                </h2>
+            </div>
+
+            <!-- Asymmetric Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-10 gap-8">
+                
+                <!-- Large Featured Left Block (60%) -->
+                <div class="lg:col-span-6 relative group flex flex-col justify-between bg-gradient-to-br from-[#EFF6FF] via-white to-[#ECFEFF] border border-slate-100 rounded-3xl p-8 md:p-12 overflow-hidden min-h-[480px]">
+                    <span class="bg-primary text-white text-xs px-4 py-2 rounded-full font-bold uppercase tracking-wider self-start z-10">Premium Spotlight</span>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center flex-1 my-6">
+                        <div class="space-y-4 z-10">
+                            <h3 class="text-2xl md:text-3xl font-display text-darkText">ProStudio 500 Studio Monitor</h3>
+                            <p class="text-sm text-lightText font-light leading-relaxed">
+                                Professional closed-back headphones featuring ultra-dynamic drivers for pinpoint precision in reference-grade acoustic monitoring.
+                            </p>
+                            <span class="block text-primary font-bold text-2xl">$499.00</span>
+                        </div>
+                        <div class="flex justify-center transition-transform duration-500 group-hover:scale-105">
+                            <i class="fa-solid fa-headphones text-9xl text-primary drop-shadow-lg"></i>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-4 z-10">
+                        <button class="add-to-cart-btn px-6 py-3.5 bg-primary text-white text-sm font-semibold rounded-xl hover:bg-primaryDark transition-all flex items-center justify-center space-x-2" data-id="11" data-name="ProStudio 500" data-price="499.00">
+                            <i class="fa-solid fa-cart-plus"></i>
+                            <span>Add to Cart</span>
+                        </button>
+                        <button class="wishlist-btn px-6 py-3.5 bg-white border border-slate-200 text-darkText text-sm font-semibold rounded-xl hover:bg-slate-50 transition-all flex items-center justify-center space-x-2">
+                            <i class="fa-regular fa-heart"></i>
+                            <span>Add to Wishlist</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Small Stacked Right Blocks (40%) -->
+                <div class="lg:col-span-4 flex flex-col gap-8">
+                    
+                    <!-- Stack 1 -->
+                    <div class="flex-1 bg-white border border-slate-100 rounded-3xl p-6 flex justify-between items-center relative group overflow-hidden">
+                        <div class="space-y-2 z-10 pr-4">
+                            <span class="text-[10px] uppercase font-bold tracking-widest text-accent">Accessories</span>
+                            <h3 class="text-lg text-darkText group-hover:text-primary transition-colors">AeroWave Power Stand</h3>
+                            <span class="block text-primary font-bold text-base">$69.99</span>
+                            <button class="add-to-cart-btn text-xs font-semibold uppercase text-primary hover:text-primaryDark transition-colors mt-2 block" data-id="12" data-name="AeroWave Stand" data-price="69.99">
+                                + ADD TO CART
+                            </button>
+                        </div>
+                        <div class="w-24 h-24 flex items-center justify-center relative transition-transform duration-500 group-hover:scale-105">
+                            <div class="absolute w-16 h-16 bg-violet-500/10 rounded-full blur-lg"></div>
+                            <i class="fa-solid fa-bolt text-4xl text-violet-600"></i>
+                        </div>
+                    </div>
+
+                    <!-- Stack 2 -->
+                    <div class="flex-1 bg-white border border-slate-100 rounded-3xl p-6 flex justify-between items-center relative group overflow-hidden">
+                        <div class="space-y-2 z-10 pr-4">
+                            <span class="text-[10px] uppercase font-bold tracking-widest text-accent">Wireless Earbuds</span>
+                            <h3 class="text-lg text-darkText group-hover:text-primary transition-colors">BassCore Y10</h3>
+                            <span class="block text-primary font-bold text-base">$119.99</span>
+                            <button class="add-to-cart-btn text-xs font-semibold uppercase text-primary hover:text-primaryDark transition-colors mt-2 block" data-id="13" data-name="BassCore Y10" data-price="119.99">
+                                + ADD TO CART
+                            </button>
+                        </div>
+                        <div class="w-24 h-24 flex items-center justify-center relative transition-transform duration-500 group-hover:scale-105">
+                            <div class="absolute w-16 h-16 bg-emerald-500/10 rounded-full blur-lg"></div>
+                            <i class="fa-solid fa-circle-nodes text-4xl text-emerald-500"></i>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- 11. NEWSLETTER SECTION -->
+        <section id="contact" class="py-24 max-w-7xl mx-auto px-6 md:px-12 reveal">
+            <div class="bg-gradient-to-tr from-primaryDark to-primary rounded-[2.5rem] p-8 md:p-16 text-center text-white relative overflow-hidden shadow-2xl">
+                <!-- Abstract geometry bg -->
+                <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-white/5 rounded-full blur-3xl"></div>
+                <div class="absolute bottom-0 left-0 w-[300px] h-[300px] bg-accent/10 rounded-full blur-2xl"></div>
+
+                <div class="max-w-2xl mx-auto relative z-10 space-y-6">
+                    <span class="text-accent text-xs font-semibold uppercase tracking-widest">CRESCENDO INNER CIRCLE</span>
+                    <h2 class="text-3xl md:text-5xl tracking-wide">Stay in the Loop 🎵</h2>
+                    <p class="text-white/80 font-light text-sm md:text-base leading-relaxed">
+                        Get exclusive deals, new product drop announcements, and professional audio tuning guides delivered directly to your inbox.
+                    </p>
+
+                    <!-- Email Form -->
+                    <form id="newsletter-form" class="mt-8 relative max-w-lg mx-auto flex flex-col sm:flex-row gap-4 items-center">
+                        <div class="relative w-full">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><i class="fa-solid fa-envelope"></i></span>
+                            <input type="email" id="newsletter-email" required placeholder="Enter your email address..." class="w-full pl-12 pr-4 py-4 rounded-xl text-darkText focus:outline-none focus:ring-2 focus:ring-accent placeholder-slate-400 text-sm">
+                        </div>
+                        <button type="submit" class="w-full sm:w-auto px-8 py-4 bg-accent hover:bg-cyan-500 text-white font-semibold rounded-xl uppercase tracking-wider transition-colors shadow-lg shadow-accent/20 flex items-center justify-center space-x-2 whitespace-nowrap text-xs">
+                            <span>Subscribe</span>
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </form>
+                    
+                    <!-- Success indicator -->
+                    <div id="newsletter-success" class="hidden text-emerald-400 text-sm font-semibold flex items-center justify-center space-x-2 mt-4 animate-bounce">
+                        <i class="fa-solid fa-circle-check text-lg"></i>
+                        <span>Subscription successful! Please check your inbox.</span>
+                    </div>
+
+                    <p class="text-xs text-white/50 pt-2">No spam ever. You can unsubscribe at any point with one click.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="bg-[#0F172A] text-white pt-24 pb-12 overflow-hidden border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 pb-16 border-b border-slate-800">
+            
+            <!-- Column 1 (Large - 4 spans) -->
+            <div class="lg:col-span-4 space-y-6">
+                <a href="#home" class="flex items-center space-x-2 text-2xl font-display text-white tracking-wider">
+                    <span class="text-primary"><i class="fa-solid fa-music"></i></span>
+                    <span>CRESCENDO</span>
+                </a>
+                <p class="text-slate-400 font-light text-sm leading-relaxed">
+                    We specialize in premium, high-fidelity acoustic design engineered to deliver raw, unfiltered sonic purity for true audiophiles and audio engineers globally.
+                </p>
+                <!-- Social Icons -->
+                <div class="flex space-x-4">
+                    <a href="#" class="w-10 h-10 rounded-full border border-slate-800 bg-slate-900 flex items-center justify-center text-slate-400 hover:text-white hover:border-primary hover:bg-primary transition-all duration-300"><i class="fa-brands fa-facebook-f text-sm"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full border border-slate-800 bg-slate-900 flex items-center justify-center text-slate-400 hover:text-white hover:border-primary hover:bg-primary transition-all duration-300"><i class="fa-brands fa-instagram text-sm"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full border border-slate-800 bg-slate-900 flex items-center justify-center text-slate-400 hover:text-white hover:border-primary hover:bg-primary transition-all duration-300"><i class="fa-brands fa-twitter text-sm"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full border border-slate-800 bg-slate-900 flex items-center justify-center text-slate-400 hover:text-white hover:border-primary hover:bg-primary transition-all duration-300"><i class="fa-brands fa-youtube text-sm"></i></a>
+                </div>
+            </div>
+
+            <!-- Column 2 (2 spans) -->
+            <div class="lg:col-span-2 space-y-4">
+                <h4 class="font-display text-sm uppercase tracking-widest text-slate-300">Quick Links</h4>
+                <ul class="space-y-3 text-sm text-slate-400 font-light">
+                    <li><a href="#home" class="hover:text-primary transition-colors">Home</a></li>
+                    <li><a href="#products" class="hover:text-primary transition-colors">Products</a></li>
+                    <li><a href="#why-choose-us" class="hover:text-primary transition-colors">About Us</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">Blog & News</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">FAQs</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 3 (2 spans) -->
+            <div class="lg:col-span-2 space-y-4">
+                <h4 class="font-display text-sm uppercase tracking-widest text-slate-300">Categories</h4>
+                <ul class="space-y-3 text-sm text-slate-400 font-light">
+                    <li><a href="#categories" class="hover:text-primary transition-colors">Over-Ear Headsets</a></li>
+                    <li><a href="#categories" class="hover:text-primary transition-colors">Wireless Earbuds</a></li>
+                    <li><a href="#categories" class="hover:text-primary transition-colors">Portable Speakers</a></li>
+                    <li><a href="#categories" class="hover:text-primary transition-colors">Accessories</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 4 (4 spans) -->
+            <div class="lg:col-span-4 space-y-4">
+                <h4 class="font-display text-sm uppercase tracking-widest text-slate-300">Get In Touch</h4>
+                <ul class="space-y-3 text-sm text-slate-400 font-light">
+                    <li class="flex items-center space-x-3">
+                        <span class="text-primary"><i class="fa-solid fa-location-dot"></i></span>
+                        <span>800 Acoustic Drive, Ste 210, Austin, TX</span>
+                    </li>
+                    <li class="flex items-center space-x-3">
+                        <span class="text-primary"><i class="fa-solid fa-envelope"></i></span>
+                        <span>support@crescendo-audio.com</span>
+                    </li>
+                    <li class="flex items-center space-x-3">
+                        <span class="text-primary"><i class="fa-solid fa-phone"></i></span>
+                        <span>+1 (800) 555-0199</span>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- Bottom Copyright / Payment method icons -->
+        <div class="max-w-7xl mx-auto px-6 md:px-12 pt-12 flex flex-col md:flex-row justify-between items-center text-xs text-slate-500 font-light space-y-4 md:space-y-0">
+            <p>&copy; 2026 Crescendo Audio Inc. All rights reserved. Built with passion for perfect acoustics.</p>
+            <div class="flex space-x-4 text-xl">
+                <i class="fa-brands fa-cc-visa text-slate-600 hover:text-white transition-colors cursor-pointer"></i>
+                <i class="fa-brands fa-cc-mastercard text-slate-600 hover:text-white transition-colors cursor-pointer"></i>
+                <i class="fa-brands fa-cc-paypal text-slate-600 hover:text-white transition-colors cursor-pointer"></i>
+                <i class="fa-brands fa-cc-apple-pay text-slate-600 hover:text-white transition-colors cursor-pointer"></i>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- ================= IN-APP NOTIFICATIONS (Custom Toast Alert) ================= -->
+    <div id="toast" class="fixed bottom-6 right-6 z-[100] transform translate-y-24 opacity-0 transition-all duration-300 flex items-center space-x-3 bg-darkText text-white px-5 py-4 rounded-xl shadow-2xl max-w-sm pointer-events-none">
+        <span class="text-success text-lg"><i class="fa-solid fa-circle-check"></i></span>
+        <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Success</p>
+            <p id="toast-message" class="text-sm font-medium">Item successfully added to your cart!</p>
+        </div>
+    </div>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+    <script>
+        // State Management
+        let cart = [];
+        let wishlist = [];
+
+        // DOM elements
+        const cartBadge = document.getElementById('cart-badge');
+        const cartDrawerCount = document.getElementById('cart-drawer-count');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartEmpty = document.getElementById('cart-empty');
+        const cartSummary = document.getElementById('cart-summary');
+        const cartSubtotal = document.getElementById('cart-subtotal');
+        const clearCartBtn = document.getElementById('clear-cart');
+        const cartDrawer = document.getElementById('cart-drawer');
+        const cartBackdrop = document.getElementById('cart-backdrop');
+        const cartContent = document.getElementById('cart-content');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toast-message');
+
+        // Initializer
+        window.addEventListener('DOMContentLoaded', () => {
+            initTypewriter();
+            initParticles();
+            initStickyNav();
+            initMobileMenu();
+            initSearchOverlay();
+            initCountdown();
+            initScrollReveal();
+            initCounters();
+            init3DTilt();
+            initCategoryControls();
+            initTestimonialCarousel();
+            initCartSystem();
+            initWishlist();
+            initNewsletter();
+        });
+
+        // 1. Typewriter Effect
+        function initTypewriter() {
+            const strings = ["Elevate Your Sound", "Perfect Acoustic Design", "Studio Quality Sound"];
+            let currentStringIdx = 0;
+            let currentLetterIdx = 0;
+            let isDeleting = false;
+            const targetEl = document.getElementById('typewriter-text');
+            const typingSpeed = 100;
+            const erasingSpeed = 50;
+            const pauseBetween = 2000;
+
+            function type() {
+                const currentStr = strings[currentStringIdx];
+                if (isDeleting) {
+                    targetEl.textContent = currentStr.substring(0, currentLetterIdx - 1);
+                    currentLetterIdx--;
+                } else {
+                    targetEl.textContent = currentStr.substring(0, currentLetterIdx + 1);
+                    currentLetterIdx++;
+                }
+
+                if (!isDeleting && currentLetterIdx === currentStr.length) {
+                    isDeleting = true;
+                    setTimeout(type, pauseBetween);
+                } else if (isDeleting && currentLetterIdx === 0) {
+                    isDeleting = false;
+                    currentStringIdx = (currentStringIdx + 1) % strings.length;
+                    setTimeout(type, 500);
+                } else {
+                    setTimeout(type, isDeleting ? erasingSpeed : typingSpeed);
+                }
+            }
+            setTimeout(type, 500);
+        }
+
+        // 2. Float Particles (Background Hero section)
+        function initParticles() {
+            const container = document.getElementById('particle-container');
+            const particleCount = 25;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                const size = Math.random() * 8 + 4;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.opacity = Math.random() * 0.4 + 0.1;
+                
+                // Random floating motion via simple JS frames animation
+                let posX = parseFloat(particle.style.left);
+                let posY = parseFloat(particle.style.top);
+                let speedX = (Math.random() - 0.5) * 0.05;
+                let speedY = (Math.random() - 0.5) * 0.05;
+
+                function move() {
+                    posX += speedX;
+                    posY += speedY;
+                    if (posX < 0 || posX > 100) speedX *= -1;
+                    if (posY < 0 || posY > 100) speedY *= -1;
+                    particle.style.left = `${posX}%`;
+                    particle.style.top = `${posY}%`;
+                    requestAnimationFrame(move);
+                }
+                container.appendChild(particle);
+                move();
+            }
+        }
+
+        // 3. Sticky Navbar & Active Class Highlighting
+        function initStickyNav() {
+            const header = document.getElementById('main-nav');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 80) {
+                    header.classList.add('py-3', 'shadow-lg');
+                    header.classList.remove('py-4');
+                } else {
+                    header.classList.remove('py-3', 'shadow-lg');
+                    header.classList.add('py-4');
+                }
+            });
+
+            // Anchor links active highlighting using simple scrolling monitoring
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            window.addEventListener('scroll', () => {
+                let current = "";
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop - 120;
+                    if (window.pageYOffset >= sectionTop) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                navLinks.forEach(link => {
+                    link.classList.remove('active', 'text-primary');
+                    link.classList.add('text-lightText');
+                    if (link.getAttribute('href').substring(1) === current) {
+                        link.classList.add('active', 'text-primary');
+                        link.classList.remove('text-lightText');
+                    }
+                });
+            });
+        }
+
+        // 4. Hamburger Mobile Overlay Menu Open/Close
+        function initMobileMenu() {
+            const menuBtn = document.getElementById('menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const closeBtn = document.getElementById('mobile-menu-close');
+            const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+
+            menuBtn.addEventListener('click', () => {
+                mobileMenu.classList.remove('translate-x-full');
+            });
+
+            const closeMenu = () => {
+                mobileMenu.classList.add('translate-x-full');
+            };
+
+            closeBtn.addEventListener('click', closeMenu);
+            mobileLinks.forEach(link => link.addEventListener('click', closeMenu));
+        }
+
+        // 5. Search Overlay UI Controls
+        function initSearchOverlay() {
+            const searchBtn = document.getElementById('search-btn');
+            const searchOverlay = document.getElementById('search-overlay');
+            const searchClose = document.getElementById('search-close');
+
+            searchBtn.addEventListener('click', () => {
+                searchOverlay.classList.remove('scale-95', 'opacity-0', 'pointer-events-none');
+            });
+            searchClose.addEventListener('click', () => {
+                searchOverlay.classList.add('scale-95', 'opacity-0', 'pointer-events-none');
+            });
+        }
+
+        // 6. Real functional Countdown Timer
+        function initCountdown() {
+            // Target end timestamp set exactly 2 days from present load
+            const countdownEnd = new Date().getTime() + (2 * 24 * 60 * 60 * 1000);
+
+            const daysEl = document.getElementById('days');
+            const hoursEl = document.getElementById('hours');
+            const minsEl = document.getElementById('minutes');
+            const secsEl = document.getElementById('seconds');
+
+            function updateTime() {
+                const now = new Date().getTime();
+                const diff = countdownEnd - now;
+
+                if (diff <= 0) {
+                    clearInterval(interval);
+                    return;
+                }
+
+                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+                daysEl.textContent = String(d).padStart(2, '0');
+                hoursEl.textContent = String(h).padStart(2, '0');
+                minsEl.textContent = String(m).padStart(2, '0');
+                secsEl.textContent = String(s).padStart(2, '0');
+            }
+
+            const interval = setInterval(updateTime, 1000);
+            updateTime();
+        }
+
+        // 7. Scroll Reveal Trigger using native Intersection Observer
+        function initScrollReveal() {
+            const reveals = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            reveals.forEach(el => observer.observe(el));
+        }
+
+        // 8. Custom Counter Animation
+        function initCounters() {
+            const counters = document.querySelectorAll('.counter');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const target = entry.target;
+                        const limit = parseInt(target.getAttribute('data-target'));
+                        let current = 0;
+                        const speed = limit / 100;
+
+                        function increment() {
+                            current += speed;
+                            if (current < limit) {
+                                target.textContent = Math.ceil(current).toLocaleString();
+                                requestAnimationFrame(increment);
+                            } else {
+                                target.textContent = limit.toLocaleString() + "+";
+                            }
+                        }
+                        increment();
+                        observer.unobserve(target);
+                    }
+                });
+            }, { threshold: 0.8 });
+
+            counters.forEach(counter => observer.observe(counter));
+        }
+
+        // 9. Premium Mouse 3D Tilt interactive styling
+        function init3DTilt() {
+            const cards = document.querySelectorAll('.tilt-card');
+            cards.forEach(card => {
+                const inner = card.querySelector('.tilt-inner');
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const midX = rect.width / 2;
+                    const midY = rect.height / 2;
+                    
+                    const rotateX = ((y - midY) / midY) * 10; // degrees
+                    const rotateY = -((x - midX) / midX) * 10;
+                    
+                    card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+                });
+            });
+        }
+
+        // 10. Horizontal Category Row Track Controls
+        function initCategoryControls() {
+            const prev = document.getElementById('cat-prev-btn');
+            const next = document.getElementById('cat-next-btn');
+            const track = document.getElementById('cat-scroll-track');
+
+            prev.addEventListener('click', () => {
+                track.scrollBy({ left: -320, behavior: 'smooth' });
+            });
+            next.addEventListener('click', () => {
+                track.scrollBy({ left: 320, behavior: 'smooth' });
+            });
+        }
+
+        // 11. Testimonials Slide Show System
+        function initTestimonialCarousel() {
+            const track = document.getElementById('testimonial-track');
+            const dots = document.querySelectorAll('#carousel-dots button');
+            let activeIdx = 0;
+            let slideInterval;
+
+            function goToSlide(idx) {
+                activeIdx = idx;
+                track.style.transform = `translateX(-${activeIdx * 100}%)`;
+                dots.forEach((dot, index) => {
+                    if (index === activeIdx) {
+                        dot.classList.add('bg-primary', 'w-8');
+                        dot.classList.remove('bg-slate-300', 'w-3');
+                    } else {
+                        dot.classList.remove('bg-primary', 'w-8');
+                        dot.classList.add('bg-slate-300', 'w-3');
+                    }
+                });
+            }
+
+            // Dot clicks
+            dots.forEach(dot => {
+                dot.addEventListener('click', (e) => {
+                    clearInterval(slideInterval);
+                    const idx = parseInt(e.target.getAttribute('data-slide'));
+                    goToSlide(idx);
+                    startAutoplay();
+                });
+            });
+
+            function startAutoplay() {
+                slideInterval = setInterval(() => {
+                    let next = (activeIdx + 1) % dots.length;
+                    goToSlide(next);
+                }, 4000);
+            }
+
+            // Init
+            goToSlide(0);
+            startAutoplay();
+        }
+
+        // 12. Complete Shopping Cart Functionality
+        function initCartSystem() {
+            // Cart Toggle Click Handlers
+            const cartToggleBtn = document.getElementById('cart-toggle');
+            const cartCloseBtn = document.getElementById('cart-close');
+            const startShoppingBtn = document.getElementById('cart-start-shopping');
+
+            const openCart = () => {
+                cartDrawer.classList.remove('pointer-events-none');
+                cartBackdrop.classList.add('opacity-100');
+                cartBackdrop.classList.remove('pointer-events-none');
+                cartContent.classList.remove('translate-x-full');
+            };
+
+            const closeCart = () => {
+                cartDrawer.classList.add('pointer-events-none');
+                cartBackdrop.classList.remove('opacity-100');
+                cartBackdrop.classList.add('pointer-events-none');
+                cartContent.classList.add('translate-x-full');
+            };
+
+            cartToggleBtn.addEventListener('click', openCart);
+            cartCloseBtn.addEventListener('click', closeCart);
+            cartBackdrop.addEventListener('click', closeCart);
+            startShoppingBtn.addEventListener('click', closeCart);
+
+            // Add To Cart Event Hookup
+            const buyButtons = document.querySelectorAll('.add-to-cart-btn');
+            buyButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    // Locate parent element metadata or fetch direct attribute values
+                    const card = btn.closest('[data-id]');
+                    let id, name, price;
+                    
+                    if (card) {
+                        id = card.getAttribute('data-id');
+                        name = card.getAttribute('data-name');
+                        price = parseFloat(card.getAttribute('data-price'));
+                    } else {
+                        id = btn.getAttribute('data-id');
+                        name = btn.getAttribute('data-name');
+                        price = parseFloat(btn.getAttribute('data-price'));
+                    }
+
+                    addToCart(id, name, price);
+                });
+            });
+
+            // Clear Cart Actions
+            clearCartBtn.addEventListener('click', () => {
+                cart = [];
+                updateCartUI();
+                showToast("Shopping cart successfully cleared!");
+            });
+
+            // Proceed to Checkout Mock
+            document.getElementById('checkout-btn').addEventListener('click', () => {
+                showToast("Redirecting to checkout panel...");
+            });
+        }
+
+        function addToCart(id, name, price) {
+            const existing = cart.find(item => item.id === id);
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({ id, name, price, quantity: 1 });
+            }
+            updateCartUI();
+            
+            // Pulse Badge Anim
+            cartBadge.classList.add('scale-125');
+            setTimeout(() => cartBadge.classList.remove('scale-125'), 300);
+
+            showToast(`${name} added to your cart.`);
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCartUI();
+            showToast("Item removed from cart.");
+        }
+
+        function changeQuantity(id, amt) {
+            const item = cart.find(i => i.id === id);
+            if (!item) return;
+            item.quantity += amt;
+            if (item.quantity <= 0) {
+                removeFromCart(id);
+            } else {
+                updateCartUI();
+            }
+        }
+
+        function updateCartUI() {
+            // Count total quantities
+            const totalCount = cart.reduce((acc, cur) => acc + cur.quantity, 0);
+            cartBadge.textContent = totalCount;
+            cartDrawerCount.textContent = totalCount;
+
+            // Render items list inside Drawer
+            cartItemsContainer.innerHTML = '';
+            
+            if (cart.length === 0) {
+                cartItemsContainer.appendChild(document.getElementById('cart-empty'));
+                cartSummary.classList.add('hidden');
+                document.getElementById('cart-empty').classList.remove('hidden');
+            } else {
+                document.getElementById('cart-empty').classList.add('hidden');
+                cartSummary.classList.remove('hidden');
+
+                // Generate active cart items markup
+                cart.forEach(item => {
+                    const itemEl = document.createElement('div');
+                    itemEl.className = "flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-xl relative group transition-all";
+                    itemEl.innerHTML = `
+                        <div class="flex-1">
+                            <h4 class="text-sm font-semibold text-darkText">${item.name}</h4>
+                            <p class="text-xs text-primary font-bold mt-0.5">$${item.price.toFixed(2)}</p>
+                            <!-- Quantity adjustment toggles -->
+                            <div class="flex items-center space-x-2 mt-2">
+                                <button onclick="changeQuantity('${item.id}', -1)" class="w-6 h-6 border border-slate-200 bg-white hover:border-primary rounded-md flex items-center justify-center text-xs font-bold text-darkText focus:outline-none">-</button>
+                                <span class="text-xs font-medium text-slate-700">${item.quantity}</span>
+                                <button onclick="changeQuantity('${item.id}', 1)" class="w-6 h-6 border border-slate-200 bg-white hover:border-primary rounded-md flex items-center justify-center text-xs font-bold text-darkText focus:outline-none">+</button>
+                            </div>
+                        </div>
+                        <div class="text-right flex flex-col justify-between items-end h-full">
+                            <button onclick="removeFromCart('${item.id}')" class="text-lightText hover:text-red-500 text-sm p-1"><i class="fa-solid fa-trash"></i></button>
+                            <span class="text-sm font-bold text-darkText block mt-3">$${(item.price * item.quantity).toFixed(2)}</span>
+                        </div>
+                    `;
+                    cartItemsContainer.appendChild(itemEl);
+                });
+            }
+
+            // Compute total price
+            const subtotal = cart.reduce((acc, cur) => acc + (cur.price * cur.quantity), 0);
+            cartSubtotal.textContent = `$${subtotal.toFixed(2)}`;
+        }
+
+        // Globalized mapping for quantity changes and removal
+        window.changeQuantity = changeQuantity;
+        window.removeFromCart = removeFromCart;
+
+        // Custom Notification Toast Alerts (Eliminates broken native window.alert)
+        function showToast(msg) {
+            toastMessage.textContent = msg;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3000);
+        }
+
+        // 13. Wishlist Management Hookup
+        function initWishlist() {
+            const wishlistButtons = document.querySelectorAll('.wishlist-btn');
+            const wishlistBadge = document.getElementById('wishlist-badge');
+
+            wishlistButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const card = btn.closest('[data-id]');
+                    if (!card) return;
+                    const id = card.getAttribute('data-id');
+                    const name = card.getAttribute('data-name');
+
+                    const idx = wishlist.indexOf(id);
+                    const heartIcon = btn.querySelector('i');
+                    
+                    if (idx > -1) {
+                        // Remove from wishlist
+                        wishlist.splice(idx, 1);
+                        heartIcon.className = "fa-regular fa-heart text-base text-lightText";
+                        btn.classList.remove('bg-rose-50');
+                        showToast(`Removed ${name} from your wishlist.`);
+                    } else {
+                        // Add to wishlist
+                        wishlist.push(id);
+                        heartIcon.className = "fa-solid fa-heart text-base text-rose-500 animate-pulse";
+                        btn.classList.add('bg-rose-50');
+                        showToast(`Added ${name} to your wishlist.`);
+                    }
+
+                    // Wishlist badge handling
+                    if (wishlist.length > 0) {
+                        wishlistBadge.textContent = wishlist.length;
+                        wishlistBadge.classList.remove('hidden');
+                    } else {
+                        wishlistBadge.classList.add('hidden');
+                    }
+                });
+            });
+        }
+
+        // 14. Newsletter Validation Trigger
+        function initNewsletter() {
+            const form = document.getElementById('newsletter-form');
+            const successIndicator = document.getElementById('newsletter-success');
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const emailInput = document.getElementById('newsletter-email');
+                
+                // Fast visual success feedback
+                form.classList.add('hidden');
+                successIndicator.classList.remove('hidden');
+                showToast("Successfully subscribed to newsletter.");
+                
+                // Clear state
+                emailInput.value = '';
+            });
+        }
+    </script>
+</body>
+</html>
+
+```
